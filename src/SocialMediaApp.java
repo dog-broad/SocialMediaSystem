@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SocialMediaApp {
-    // Create GUI to utilize Utilities.SocialMediaSystem
-    // Create main method to run GUI
     private JFrame frame;
     private JPanel cardPanel;
     private final SocialMediaSystem system;
@@ -20,10 +18,11 @@ public class SocialMediaApp {
         initialize();
     }
 
-    private void initialize(){
+    private void initialize() {
         frame = new JFrame();
         frame.setBounds(100, 100, 450, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setBackground(new Color(240, 240, 240));
 
         cardPanel = new JPanel(new CardLayout());
         frame.getContentPane().add(cardPanel, BorderLayout.CENTER);
@@ -34,85 +33,69 @@ public class SocialMediaApp {
         showCard("Login");
 
         frame.setVisible(true);
-
     }
 
-    private void createLoginCard(){
-        // Create Login JPanel which also contains the Create Account button
+    private void createLoginCard() {
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(null);
+        loginPanel.setBackground(Color.WHITE);
 
-        // Create Social Media App label
         JLabel lblSocialMediaApp = new JLabel("Social Media App");
         lblSocialMediaApp.setFont(new Font("Tahoma", Font.PLAIN, 25));
-        lblSocialMediaApp.setBounds(130, 10, 200, 40);
+        lblSocialMediaApp.setBounds(125, 50, 200, 40);
         loginPanel.add(lblSocialMediaApp);
 
-
-        // Create Account button
         JButton btnCreateAccount = new JButton("Create Account");
-        // apply styling to button
-        btnCreateAccount.setBounds(125, 80, 200, 40);
+        btnCreateAccount.setBounds(125, 120, 200, 40);
         loginPanel.add(btnCreateAccount);
         btnCreateAccount.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = JOptionPane.showInputDialog(null, "Enter username:", "Create Account", JOptionPane.QUESTION_MESSAGE);
                 String password = JOptionPane.showInputDialog(null, "Enter password:", "Create Account", JOptionPane.QUESTION_MESSAGE);
-                // Make sure to add the user to the system
-                // check if cancel button is pressed
                 if (username != null && password != null) {
                     system.createUser(username, password);
-                }
-                else {
+                } else {
                     JOptionPane.showMessageDialog(null, "Please enter a username and password.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        // Login button
         JButton btnLogin = new JButton("Login");
-        btnLogin.setBounds(125, 140, 200, 40);
+        btnLogin.setBounds(125, 180, 200, 40);
         loginPanel.add(btnLogin);
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = JOptionPane.showInputDialog(null, "Enter username:", "Login", JOptionPane.QUESTION_MESSAGE);
                 String password = JOptionPane.showInputDialog(null, "Enter password:", "Login", JOptionPane.QUESTION_MESSAGE);
-                // check if cancel button is pressed
                 if (username != null && password != null) {
                     if (system.login(username, password)) {
-                        // create a public variable to store username
                         currentUser = system.getUser(username);
                         showCard("Post");
                     }
-                }
-                else {
+                } else {
                     JOptionPane.showMessageDialog(null, "Please enter a username and password.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
         cardPanel.add(loginPanel, "Login");
-
     }
 
-    private void createPostCard(){
-        // Create Post JPanel which also contains the Create Post button
+    private void createPostCard() {
         JPanel postPanel = new JPanel();
         postPanel.setLayout(null);
+        postPanel.setBackground(Color.WHITE);
 
-        // Create Post button
         JButton btnCreatePost = new JButton("Create Post");
         btnCreatePost.setBounds(125, 70, 200, 40);
         postPanel.add(btnCreatePost);
         btnCreatePost.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String post = JOptionPane.showInputDialog(null, "Enter post:", "Create Post", JOptionPane.QUESTION_MESSAGE);
-                // Get current username from login card
                 system.createPost(currentUser.getUsername(), post);
             }
         });
 
-        // View Posts button
         JButton btnViewPosts = new JButton("View Posts");
         btnViewPosts.setBounds(125, 130, 200, 40);
         postPanel.add(btnViewPosts);
@@ -122,18 +105,15 @@ public class SocialMediaApp {
             }
         });
 
-        // View other user's posts
-        // Take text entry for username
         JTextField txtUsername = new JTextField();
         txtUsername.setBounds(125, 190, 200, 25);
         postPanel.add(txtUsername);
         txtUsername.setColumns(10);
-        JButton btnViewOtherPosts = new JButton("View Other Utilities.User's Posts");
+        JButton btnViewOtherPosts = new JButton("View Other User's Posts");
         btnViewOtherPosts.setBounds(125, 220, 200, 40);
         postPanel.add(btnViewOtherPosts);
         btnViewOtherPosts.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // If text entry is empty, show error message
                 if (txtUsername.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a username", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -143,7 +123,6 @@ public class SocialMediaApp {
             }
         });
 
-        // Logout button
         JButton btnLogout = new JButton("Logout");
         btnLogout.setBounds(125, 270, 200, 40);
         postPanel.add(btnLogout);
@@ -155,14 +134,23 @@ public class SocialMediaApp {
 
         cardPanel.add(postPanel, "Post");
     }
+
     private void showCard(String cardName) {
         CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
         cardLayout.show(cardPanel, cardName);
     }
 
-    // Create the main method to run the GUI
     public static void main(String[] args) {
-        SocialMediaApp app = new SocialMediaApp();
-        app.frame.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SocialMediaApp app = new SocialMediaApp();
+                app.frame.setVisible(true);
+            }
+        });
     }
 }

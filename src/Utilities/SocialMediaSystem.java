@@ -28,7 +28,7 @@ public class SocialMediaSystem {
         if (!users.containsKey(username)) {
             User newUser = new User(username, password);
             users.put(username, newUser);
-            JOptionPane.showMessageDialog(null, "Utilities.User created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "User created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.", "Error", JOptionPane.ERROR_MESSAGE);
         }
