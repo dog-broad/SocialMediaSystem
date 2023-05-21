@@ -1,3 +1,5 @@
+package Utilities;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,7 +8,7 @@ import java.util.List;
 This class represents a user on the social media system.
 It has a username, password, and list of posts.
 */
-class User {
+public class User {
     private String username;
     private String password;
     private List<String> posts;

@@ -1,3 +1,5 @@
+package Utilities;
+
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.Map;
 This class represents the social media system.
 It has a map of users and a method for creating, logging in, and creating posts.
 */
-class SocialMediaSystem {
+public class SocialMediaSystem {
 
     private Map<String, User> users;
 
@@ -26,7 +28,7 @@ class SocialMediaSystem {
         if (!users.containsKey(username)) {
             User newUser = new User(username, password);
             users.put(username, newUser);
-            JOptionPane.showMessageDialog(null, "User created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Utilities.User created successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -78,11 +80,11 @@ class SocialMediaSystem {
             for (String post : posts) {
                 message.append(post).append("\n");
             }
-            JOptionPane.showMessageDialog(null, message.toString(), "User Posts", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, message.toString(), "Utilities.User Posts", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    // Create a method to get the User object for a given username.
+    // Create a method to get the Utilities.User object for a given username.
     public User getUser(String username) {
         return users.get(username);
     }

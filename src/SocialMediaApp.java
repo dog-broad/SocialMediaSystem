@@ -1,10 +1,13 @@
+import Utilities.SocialMediaSystem;
+import Utilities.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SocialMediaApp {
-    // Create GUI to utilize SocialMediaSystem
+    // Create GUI to utilize Utilities.SocialMediaSystem
     // Create main method to run GUI
     private JFrame frame;
     private JPanel cardPanel;
@@ -125,7 +128,7 @@ public class SocialMediaApp {
         txtUsername.setBounds(125, 190, 200, 25);
         postPanel.add(txtUsername);
         txtUsername.setColumns(10);
-        JButton btnViewOtherPosts = new JButton("View Other User's Posts");
+        JButton btnViewOtherPosts = new JButton("View Other Utilities.User's Posts");
         btnViewOtherPosts.setBounds(125, 220, 200, 40);
         postPanel.add(btnViewOtherPosts);
         btnViewOtherPosts.addActionListener(new ActionListener() {
