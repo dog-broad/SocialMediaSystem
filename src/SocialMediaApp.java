@@ -22,7 +22,6 @@ public class SocialMediaApp {
         frame = new JFrame();
         frame.setBounds(100, 100, 450, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setBackground(new Color(240, 240, 240));
 
         cardPanel = new JPanel(new CardLayout());
         frame.getContentPane().add(cardPanel, BorderLayout.CENTER);
@@ -143,8 +142,9 @@ public class SocialMediaApp {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                // Change the look and feel to the black
                 try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
