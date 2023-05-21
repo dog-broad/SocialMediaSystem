@@ -1,220 +1,165 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-/*
-This class represents a user on the social media system.
-It has a username, password, and list of posts.
-*/
-class User {
-
-    private String username;
-    private String password;
-    private List<String> posts;
-
-    /*
-    Constructs a new user with the given username and password.
-    */
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.posts = new ArrayList<>();
-    }
-
-    /*
-    Returns the username of this user.
-    */
-    public String getUsername() {
-        return username;
-    }
-
-    /*
-    Authenticates the user with the given password.
-    Returns true if the password is correct, false otherwise.
-    */
-    public boolean authenticate(String password) {
-        return this.password.equals(password);
-    }
-
-    /*
-    Add a post to this user's list of posts.
-    */
-    public void addPost(String post) {
-        posts.add(post);
-    }
-
-    /*
-    Returns a list of this user's posts.
-    */
-    public List<String> getPosts() {
-        return posts;
-    }
-}
-
-/*
-This class represents the social media system.
-It has a map of users and a method for creating, logging in, and creating posts.
-*/
-class SocialMediaSystem {
-
-    private Map<String, User> users;
-
-    /*
-    Constructs a new social media system.
-    */
-    public SocialMediaSystem() {
-        this.users = new HashMap<>();
-    }
-
-    /*
-    Creates a new user with the given username and password.
-    If the username already exists, an error message is printed.
-    */
-    public void createUser(String username, String password) {
-        if (!users.containsKey(username)) {
-            User newUser = new User(username, password);
-            users.put(username, newUser);
-            System.out.println("User created successfully.");
-        } else {
-            System.out.println("Username already exists. Please choose a different username.");
-        }
-    }
-
-    /*
-    Logs in a user with the given username and password.
-    If the username or password is incorrect, an error message is printed.
-    */
-    public void login(String username, String password) {
-        if (users.containsKey(username)) {
-            User user = users.get(username);
-            if (user.authenticate(password)) {
-                System.out.println("Login successful!");
-                showUserPosts(String.valueOf(user));
-            } else {
-                System.out.println("Incorrect password. Please try again.");
-            }
-        } else {
-            System.out.println("Username does not exist. Please sign up for a new account.");
-        }
-    }
-
-    /*
-    Creates a new post for the user with the given username.
-    If the username does not exist, an error message is printed.
-    */
-    public void createPost(String username, String post) {
-        if (users.containsKey(username)) {
-            User user = users.get(username);
-            user.addPost(post);
-            System.out.println("Post created successfully.");
-        } else {
-            System.out.println("Username does not exist. Please sign up for a new account.");
-        }
-    }
-
-    /*
-    Shows the posts for the user with the given username.
-    If the username does not exist, an error message is printed.
-    */
-    public void showUserPosts(String username) {
-        if (users.containsKey(username)) {
-            User user = users.get(username);
-            List<String> posts = user.getPosts();
-            if (posts.isEmpty()) {
-                System.out.println("No posts to show.");
-            } else {
-                System.out.println("Posts for user " + user.getUsername() + ":");
-                for (String post : posts) {
-                    System.out.println(post);
-                }
-            }
-        }
-    }
-}
 public class SocialMediaApp {
+    // Create GUI to utilize SocialMediaSystem
+    // Create main method to run GUI
+    private JFrame frame;
+    private JPanel cardPanel;
+    private final SocialMediaSystem system;
+
+    private User currentUser;
+
+    public SocialMediaApp() {
+        this.system = new SocialMediaSystem();
+        initialize();
+    }
+
+    private void initialize(){
+        frame = new JFrame();
+        frame.setBounds(100, 100, 450, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        cardPanel = new JPanel(new CardLayout());
+        frame.getContentPane().add(cardPanel, BorderLayout.CENTER);
+
+        createLoginCard();
+        createPostCard();
+
+        showCard("Login");
+
+        frame.setVisible(true);
+
+    }
+
+    private void createLoginCard(){
+        // Create Login JPanel which also contains the Create Account button
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(null);
+
+        // Create Social Media App label
+        JLabel lblSocialMediaApp = new JLabel("Social Media App");
+        lblSocialMediaApp.setFont(new Font("Tahoma", Font.PLAIN, 25));
+        lblSocialMediaApp.setBounds(130, 10, 200, 40);
+        loginPanel.add(lblSocialMediaApp);
+
+
+        // Create Account button
+        JButton btnCreateAccount = new JButton("Create Account");
+        // apply styling to button
+        btnCreateAccount.setBounds(125, 80, 200, 40);
+        loginPanel.add(btnCreateAccount);
+        btnCreateAccount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String username = JOptionPane.showInputDialog(null, "Enter username:", "Create Account", JOptionPane.QUESTION_MESSAGE);
+                String password = JOptionPane.showInputDialog(null, "Enter password:", "Create Account", JOptionPane.QUESTION_MESSAGE);
+                // Make sure to add the user to the system
+                // check if cancel button is pressed
+                if (username != null && password != null) {
+                    system.createUser(username, password);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Please enter a username and password.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Login button
+        JButton btnLogin = new JButton("Login");
+        btnLogin.setBounds(125, 140, 200, 40);
+        loginPanel.add(btnLogin);
+        btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String username = JOptionPane.showInputDialog(null, "Enter username:", "Login", JOptionPane.QUESTION_MESSAGE);
+                String password = JOptionPane.showInputDialog(null, "Enter password:", "Login", JOptionPane.QUESTION_MESSAGE);
+                // check if cancel button is pressed
+                if (username != null && password != null) {
+                    if (system.login(username, password)) {
+                        // create a public variable to store username
+                        currentUser = system.getUser(username);
+                        showCard("Post");
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Please enter a username and password.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        cardPanel.add(loginPanel, "Login");
+
+    }
+
+    private void createPostCard(){
+        // Create Post JPanel which also contains the Create Post button
+        JPanel postPanel = new JPanel();
+        postPanel.setLayout(null);
+
+        // Create Post button
+        JButton btnCreatePost = new JButton("Create Post");
+        btnCreatePost.setBounds(125, 70, 200, 40);
+        postPanel.add(btnCreatePost);
+        btnCreatePost.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String post = JOptionPane.showInputDialog(null, "Enter post:", "Create Post", JOptionPane.QUESTION_MESSAGE);
+                // Get current username from login card
+                system.createPost(currentUser.getUsername(), post);
+            }
+        });
+
+        // View Posts button
+        JButton btnViewPosts = new JButton("View Posts");
+        btnViewPosts.setBounds(125, 130, 200, 40);
+        postPanel.add(btnViewPosts);
+        btnViewPosts.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                system.showUserPosts(currentUser);
+            }
+        });
+
+        // View other user's posts
+        // Take text entry for username
+        JTextField txtUsername = new JTextField();
+        txtUsername.setBounds(125, 190, 200, 25);
+        postPanel.add(txtUsername);
+        txtUsername.setColumns(10);
+        JButton btnViewOtherPosts = new JButton("View Other User's Posts");
+        btnViewOtherPosts.setBounds(125, 220, 200, 40);
+        postPanel.add(btnViewOtherPosts);
+        btnViewOtherPosts.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // If text entry is empty, show error message
+                if (txtUsername.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a username", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String username = txtUsername.getText();
+                system.showUserPosts(system.getUser(username));
+            }
+        });
+
+        // Logout button
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.setBounds(125, 270, 200, 40);
+        postPanel.add(btnLogout);
+        btnLogout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showCard("Login");
+            }
+        });
+
+        cardPanel.add(postPanel, "Post");
+    }
+    private void showCard(String cardName) {
+        CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
+        cardLayout.show(cardPanel, cardName);
+    }
+
+    // Create the main method to run the GUI
     public static void main(String[] args) {
-        SocialMediaSystem socialMediaSystem = new SocialMediaSystem();
-        Scanner scanner = new Scanner(System.in);
-
-        boolean isRunning = true;
-        boolean isLoggedIn = false;
-
-        while (isRunning) {
-            if(!isLoggedIn) {
-                System.out.println("Welcome to the Social Media System!");
-                System.out.println("1. Create an account");
-                System.out.println("2. Log in");
-                System.out.println("3. Exit");
-                System.out.print("Enter your choice: ");
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
-
-                switch (choice) {
-                    case 1:
-                        System.out.print("Enter a username: ");
-                        String username = scanner.nextLine();
-                        System.out.print("Enter a password: ");
-                        String password = scanner.nextLine();
-                        socialMediaSystem.createUser(username, password);
-                        break;
-                    case 2:
-                        System.out.print("Enter your username: ");
-                        String loginUsername = scanner.nextLine();
-                        System.out.print("Enter your password: ");
-                        String loginPassword = scanner.nextLine();
-                        socialMediaSystem.login(loginUsername, loginPassword);
-                        isLoggedIn = true;
-                        break;
-                    case 3:
-                        isRunning = false;
-                        System.out.println("Goodbye!");
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                }
-            }
-            else {
-                // TODO: Add a menu for creating posts
-                // Take user to new menu
-                // 1. Create a post
-                // 2. Show posts
-                // 3. Log out
-                // 4. Exit
-                // Start writing code here
-                System.out.println("1. Create a post");
-                System.out.println("2. Show posts");
-                System.out.println("3. Log out");
-                System.out.println("4. Exit");
-                System.out.print("Enter your choice: ");
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
-                switch (choice){
-                    case 1:
-                        System.out.print("Enter your post: ");
-                        String post = scanner.nextLine();
-                        // Create post
-                        socialMediaSystem.createPost(String.valueOf(socialMediaSystem), post);
-                        break;
-                    case 2:
-                        System.out.print("Enter username to check posts: ");
-                        String username2 = scanner.nextLine();
-                        socialMediaSystem.showUserPosts(username2);
-                        break;
-                    case 3:
-                        isLoggedIn = false;
-                        break;
-                    case 4:
-                        isRunning = false;
-                        System.out.println("Goodbye!");
-                        break;
-                }
-            }
-            System.out.println();
-        }
-        scanner.close();
+        SocialMediaApp app = new SocialMediaApp();
+        app.frame.setVisible(true);
     }
 }
-
-
